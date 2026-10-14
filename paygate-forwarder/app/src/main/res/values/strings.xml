@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PayGate Forwarder</string>
+    <string name="notif_channel_name">Forwarder status</string>
+    <string name="notif_title">PayGate Forwarder active</string>
+</resources>
