@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg: #FAFAF9;
+    --surface: #FFFFFF;
+    --surface-2: #F4F4F2;
+    --border: #E7E7E3;
+    --ink: #0E0E11;
+    --ink-2: #55555E;
+    --ink-3: #8A8A94;
+    --accent: #5B5BF0;
+    --accent-soft: #EEEEFF;
+    --success: #12B76A;
+    --warning: #F79009;
+    --danger: #F04438;
+
+    --bkash: #E2136E;
+    --nagad: #F6921E;
+    --rocket: #8C3494;
+    --upay: #FF5B00;
+    --cellfin: #008A44;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  }
+
+  .font-bn {
+    font-family: 'Noto Sans Bengali', system-ui, sans-serif;
+  }
+}

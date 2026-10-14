@@ -26,7 +26,7 @@ export async function dispatchRealWebhook(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'User-Agent': 'PayGate-Webhook-Dispatcher/4.0',
+        'User-Agent': 'Krostio-Webhook-Dispatcher/4.0',
         'PayGate-Signature': signatureHeader,
       },
       body: rawBody,

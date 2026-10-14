@@ -1,4 +1,4 @@
-name: PayGate CI/CD Pipeline
+name: Krostio CI/CD Pipeline
 
 on:
   push:

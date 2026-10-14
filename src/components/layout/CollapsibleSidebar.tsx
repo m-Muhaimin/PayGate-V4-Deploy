@@ -142,7 +142,7 @@ export const CollapsibleSidebar: React.FC<CollapsibleSidebarProps> = ({
               </div>
               <div className="min-w-0">
                 <span className="text-xs font-bold text-[var(--ink)] truncate block leading-tight">
-                  {isOpsAdmin ? 'PayGate Ops Command' : merchant.name}
+                  {isOpsAdmin ? 'Krostio Ops Command' : merchant.name}
                 </span>
                 <span className="text-[10px] text-[var(--success)] flex items-center gap-1 font-medium">
                   <ShieldCheck className="w-3 h-3" /> {isOpsAdmin ? 'Super Admin Mode' : 'KYB Verified'}
@@ -320,10 +320,10 @@ export const CollapsibleSidebar: React.FC<CollapsibleSidebarProps> = ({
         {!isCollapsed ? (
           <div className="p-2 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] text-[11px] flex items-center justify-between">
             <span className="text-[var(--ink-3)]">Gateway Version</span>
-            <span className="font-mono font-bold text-[var(--accent)]">PayGate v4.0</span>
+            <span className="font-mono font-bold text-[var(--accent)]">Krostio v4.0</span>
           </div>
         ) : (
-          <div className="flex justify-center text-[10px] font-mono text-[var(--ink-3)]" title="PayGate v4.0">
+          <div className="flex justify-center text-[10px] font-mono text-[var(--ink-3)]" title="Krostio v4.0">
             v4
           </div>
         )}

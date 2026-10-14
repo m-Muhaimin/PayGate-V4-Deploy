@@ -1,0 +1,77 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "dist",
+  "installCommand": "npm ci --include=dev",
+  "framework": null,
+  "functions": {
+    "api/index.ts": {
+      "runtime": "@vercel/node@5.5.15",
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  },
+  "crons": [
+    {
+      "path": "/_cron/outbox",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/_cron/expiry-sweeper",
+      "schedule": "* * * * *"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/v1/(.*)",
+      "has": [{ "type": "host", "value": "api.krostio.com" }],
+      "destination": "/api/index"
+    },
+    {
+      "source": "/_cron/(.*)",
+      "has": [{ "type": "host", "value": "api.krostio.com" }],
+      "destination": "/api/index"
+    },
+    {
+      "source": "/pay/(.*)",
+      "has": [{ "type": "host", "value": "krostio.com" }],
+      "destination": "/checkout/index.html"
+    },
+    {
+      "source": "/krostio.js",
+      "has": [{ "type": "host", "value": "krostio.com" }],
+      "destination": "/checkout/krostio.js"
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "krostio.com" }],
+      "destination": "/landing/index.html"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "has": [{ "type": "host", "value": "merchant.krostio.com" }],
+      "destination": "/merchant/index.html"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "has": [{ "type": "host", "value": "admin.krostio.com" }],
+      "destination": "/admin/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}

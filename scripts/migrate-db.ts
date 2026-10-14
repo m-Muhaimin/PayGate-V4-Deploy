@@ -1,5 +1,5 @@
 /**
- * PayGate Database Migration & Production Seeding Script
+ * Krostio Database Migration & Production Seeding Script
  * Synchronizes schema tables, seeds wallet pool, pricing plans, devices,
  * API keys, merchant accounts, and audit log entries in PostgreSQL / Supabase.
  */
@@ -32,7 +32,7 @@ const stats: MigrationStats = {
 
 async function runMigration() {
   console.log('====================================================');
-  console.log('   PayGate Database Migration & Seeding Engine      ');
+  console.log('   Krostio Database Migration & Seeding Engine      ');
   console.log('====================================================');
 
   if (!isSupabaseConfigured()) {
@@ -420,7 +420,7 @@ async function runMigration() {
     actor: 'system_migration_cli',
     action: 'DATABASE_MIGRATION_COMPLETED',
     entity_type: 'system',
-    entity_id: 'mig_v4_paygate_prod',
+    entity_id: 'mig_v4_krostio_prod',
     before: null,
     after: {
       migratedAt: new Date().toISOString(),

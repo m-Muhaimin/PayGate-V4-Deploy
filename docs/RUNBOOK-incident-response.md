@@ -6,7 +6,7 @@
   1. Inspect physical handset on Android device farm rack.
   2. Verify battery level > 20% and charging cable connection.
   3. Verify SIM signal bars and mobile data connection.
-  4. Launch PayGate Forwarder app and tap "Force Test Ping".
+  4. Launch Krostio Forwarder app and tap "Force Test Ping".
 
 ## 2. Ingest Signature Mismatch / Replay Alerts
 - **Symptom**: Sudden surge in `403 Forbidden` on `/v1/sms/webhook` logged to `quarantined_sms`.

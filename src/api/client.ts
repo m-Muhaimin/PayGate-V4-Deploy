@@ -1,5 +1,5 @@
 /**
- * PayGate Typed API Client
+ * Krostio Typed API Client
  * Connects frontend apps to Express API endpoints (/v1) with Bearer API Key
  * and Admin authentication support.
  */
@@ -17,7 +17,7 @@ import { Payment, DeviceInfo, PricingPlan } from '../types';
 export class PayGateApiClient {
   private baseUrl: string;
   private apiKey: string = 'sk_live_pg_99210a48b3c109df291c';
-  private adminToken: string = 'adm_sec_paygate_prod9910';
+  private adminToken: string = 'adm_sec_krostio_prod9910';
 
   constructor(baseUrl: string = '') {
     this.baseUrl = baseUrl;

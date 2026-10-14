@@ -24,7 +24,7 @@ export const WalletPoolTab: React.FC = () => {
         <div>
           <h3 className="text-base font-bold text-[var(--ink)]">MFS Receiving Wallet Pool</h3>
           <p className="text-xs text-[var(--ink-2)] mt-0.5">
-            Wallets receive payments from customers. PayGate automatically assigns active wallets with the lowest
+            Wallets receive payments from customers. Krostio automatically assigns active wallets with the lowest
             recent assignments, and auto-drains wallets reaching &gt;80% of daily limits to avoid operator freezes.
           </p>
         </div>

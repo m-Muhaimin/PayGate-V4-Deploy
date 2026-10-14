@@ -104,12 +104,12 @@ export const HostedPayPage: React.FC<HostedPayPageProps> = ({
     return () => clearInterval(interval);
   }, [isMatching, payment?.status]);
 
-  // Dispatch postMessage event to parent frame for paygate.js popup SDK
+  // Dispatch postMessage event to parent frame for krostio.js popup SDK
   useEffect(() => {
     if (payment?.status === 'paid' && typeof window !== 'undefined' && window.parent) {
       window.parent.postMessage(
         {
-          type: 'paygate:paid',
+          type: 'krostio:paid',
           payload: {
             paymentId: payment.id,
             orderId: payment.orderId,
@@ -526,7 +526,7 @@ export const HostedPayPage: React.FC<HostedPayPageProps> = ({
 
         {/* Footer */}
         <div className="p-3 bg-[var(--surface-2)] border-t border-[var(--border)] text-center text-[11px] text-[var(--ink-3)] flex items-center justify-center gap-2">
-          <span>PayGate API v3.1</span>
+          <span>Krostio API v3.1</span>
           <span>·</span>
           <span>256-bit TLS</span>
           <span>·</span>

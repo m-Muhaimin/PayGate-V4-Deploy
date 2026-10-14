@@ -1,10 +1,10 @@
-# PayGate Platform — Product Requirements Document (PRD v4.0)
+# Krostio Platform — Product Requirements Document (PRD v4.0)
 
-**Document Title**: PayGate Platform — Product Requirements Document v4.0 (Monorepo Architecture & 5-Provider MFS Gateway)  
+**Document Title**: Krostio Platform — Product Requirements Document v4.0 (Monorepo Architecture & 5-Provider MFS Gateway)  
 **System Architecture**: Vite 8 + React 19 Monorepo · Supabase / PostgreSQL 15+ · Option A Verifier Custody · Progressive Web App (PWA)  
 **Framework Decision**: Vite SPA was selected over Next.js to enforce strict subdomain build isolation (admin code cannot leak to merchant or checkout bundles), eliminate SSR server bloat at the edge for static checkout shells, and cleanly separate client UI from backend API services touching money.  
 **Design System**: Gate UI Design System  
-**Companion Documents**: PayGate SMS Forwarder PRD v4.0 · Gate UI Tokens & Design Specification · Architecture Decision Records (ADRs)  
+**Companion Documents**: Krostio SMS Forwarder PRD v4.0 · Gate UI Tokens & Design Specification · Architecture Decision Records (ADRs)  
 **Date**: 13 October 2026  
 **Status**: Production Architecture & Monorepo Implementation  
 
@@ -12,9 +12,9 @@
 
 ## 1. Product at a Glance
 
-PayGate enables Bangladeshi online merchants to accept **bKash**, **Nagad**, **Rocket**, **Upay**, and **Cellfin** (IBBL) mobile financial and digital banking payments with **zero provider direct API integration**, no personal merchant numbers, and no merchant-side phone infrastructure.
+Krostio enables Bangladeshi online merchants to accept **bKash**, **Nagad**, **Rocket**, **Upay**, and **Cellfin** (IBBL) mobile financial and digital banking payments with **zero provider direct API integration**, no personal merchant numbers, and no merchant-side phone infrastructure.
 
-Customers transfer funds to a PayGate-managed wallet pool quoting an 8-character, polynomial typo-checked reference. A dedicated Super Admin Android Forwarder handset running the PayGate Forwarder app pushes confirmation SMS messages to the server over an IP-whitelisted, cryptographically signed endpoint. The atomic matching engine verifies the transaction, fires HMAC-SHA256 signed webhooks to the merchant, and records double-entry ledger entries for automated BEFTN bank or MFS payout batching.
+Customers transfer funds to a Krostio-managed wallet pool quoting an 8-character, polynomial typo-checked reference. A dedicated Super Admin Android Forwarder handset running the Krostio Forwarder app pushes confirmation SMS messages to the server over an IP-whitelisted, cryptographically signed endpoint. The atomic matching engine verifies the transaction, fires HMAC-SHA256 signed webhooks to the merchant, and records double-entry ledger entries for automated BEFTN bank or MFS payout batching.
 
 **The Core Invariant**: Pure rules (money arithmetic, references, SMS parsers, state machines, matching rules) are shared, tested code, and the only components that touch money are the server-authoritative API and PostgreSQL database.
 
@@ -22,12 +22,12 @@ Customers transfer funds to a PayGate-managed wallet pool quoting an 8-character
 
 ## 2. Monorepo Architecture & Isolation Boundary
 
-The PayGate codebase is structured as a decoupled monorepo to guarantee that sensitive administrative and operational logic never reaches a merchant or customer browser bundle:
+The Krostio codebase is structured as a decoupled monorepo to guarantee that sensitive administrative and operational logic never reaches a merchant or customer browser bundle:
 
 ```
-paygate/
+krostio/
 ├── apps/
-│   ├── checkout/                 # pay.* hosted checkout page and paygate.js popup
+│   ├── checkout/                 # pay.* hosted checkout page and krostio.js popup
 │   ├── merchant/                 # merchant.* merchant SaaS portal (no admin code bundled)
 │   ├── admin/                    # admin.* operations console (SSO & MFA only)
 │   └── api/                      # Fastify / Express service (/v1 REST, SMS ingest, outbox worker)
@@ -49,21 +49,21 @@ paygate/
 
 | Subdomain | App Package | Target Users | Key Routes & Boundaries |
 | :--- | :--- | :--- | :--- |
-| **`pay.example.com`** | `apps/checkout` | End-User Buyers | Hosted checkout `/pay/:id` and popup overlay (`paygate.js`). Renders provider instructions, one-tap copy, TrxID submission, and 6 Gate UI states. |
+| **`pay.example.com`** | `apps/checkout` | End-User Buyers | Hosted checkout `/pay/:id` and popup overlay (`krostio.js`). Renders provider instructions, one-tap copy, TrxID submission, and 6 Gate UI states. |
 | **`merchant.example.com`** | `apps/merchant` | Online Merchants, Store Owners, Finance Teams | `/overview`, `/payments`, `/plans`, `/settlements`, `/developers`, `/settings`. Self-service payment monitoring, pricing plans in integer paisa, double-entry statement auditing, and payout initiation. |
-| **`admin.example.com`** | `apps/admin` | PayGate Operations, Risk Officers, Platform Engineers | `/admin` (overview), `/admin/device` (Super Admin SMS Forwarder & IP Firewall), `/admin/wallets` (pool limits & auto-drain), `/admin/review` (discrepancy resolution), `/admin/payouts` (BEFTN batching & maker-checker clearing), `/admin/audit` (immutable audit trail). |
+| **`admin.example.com`** | `apps/admin` | Krostio Operations, Risk Officers, Platform Engineers | `/admin` (overview), `/admin/device` (Super Admin SMS Forwarder & IP Firewall), `/admin/wallets` (pool limits & auto-drain), `/admin/review` (discrepancy resolution), `/admin/payouts` (BEFTN batching & maker-checker clearing), `/admin/audit` (immutable audit trail). |
 | **`api.example.com`** | `apps/api` | Merchant Backends, Forwarder Handset Fleet | `/v1/payments`, `/v1/pay/:id/confirm`, `/v1/sms/webhook`, `/v1/devices/heartbeat`, `/v1/outbox/process`. Authoritative financial state machine, double-entry ledger, cryptographic signature verification. |
 
 ### 2.2 Framework Decision Rationale (Vite vs. Next.js)
 
 1. **Subdomain Bundle Isolation**: With Vite, `apps/checkout`, `apps/merchant`, and `apps/admin` compile into distinct standalone bundles (`build:checkout`, `build:merchant`, `build:admin`). Operations code, device telemetry, and internal audit routines are physically excluded from merchant and customer bundles.
 2. **Edge Performance & PWA**: The checkout shell is a static client-side PWA asset capable of sub-second cold starts without requiring a Node.js SSR runtime on edge proxies.
-3. **Custody & Separation of Concerns**: Browser apps cannot mutate financial state directly. They submit signed intents through `@paygate/contracts` to the backend API (`server.ts`), which enforces atomic database constraints.
+3. **Custody & Separation of Concerns**: Browser apps cannot mutate financial state directly. They submit signed intents through `@krostio/contracts` to the backend API (`server.ts`), which enforces atomic database constraints.
 4. **Developer Velocity**: Instant Vite/esbuild compilation across shared TypeScript packages without complex multi-zone SSR configurations.
 
 ---
 
-## 3. Pure Domain Rules & Financial Invariants (`@paygate/domain`)
+## 3. Pure Domain Rules & Financial Invariants (`@krostio/domain`)
 
 ### 3.1 Branded Integer-Paisa Type
 All currency values are strictly represented in integer paisa using TypeScript nominal branding:
@@ -106,11 +106,11 @@ created ──> awaiting_payment ──┬──> confirming ──┬──> pa
         │
         │ 1. Merchant backend calls POST https://api.example.com/v1/payments
         ▼
-[PayGate API Server]
+[Krostio API Server]
         │
         │ 2. Assigns pool wallet + generates 8-char reference (e.g., K7M4X2QH)
         ▼
-[Hosted Pay Page / paygate.js Popup Modal]
+[Hosted Pay Page / krostio.js Popup Modal]
         │
         │ 3. Customer copies Wallet Number & Reference, completes transfer in MFS app
         │ 4. Customer submits TrxID and clicks "Confirm Payment"
@@ -164,7 +164,7 @@ created ──> awaiting_payment ──┬──> confirming ──┬──> pa
    - Genesis block uses 64 zeros. Any manual record alteration breaks the cryptographic verification chain.
 
 3. **Webhook Verification (HMAC-SHA256)**:
-   - Header: `PayGate-Signature: t=<unix>,v1=<hex_hmac>`.
+   - Header: `Krostio-Signature: t=<unix>,v1=<hex_hmac>`.
    - Signed content: `${timestamp}.${rawJsonBody}`.
    - Constant-time comparison prevents timing side-channel attacks.
 
@@ -173,13 +173,13 @@ created ──> awaiting_payment ──┬──> confirming ──┬──> pa
 
 ---
 
-## 6. Embeddable Checkout SDK (`public/paygate.js`)
+## 6. Embeddable Checkout SDK (`public/krostio.js`)
 
 Merchants can embed the public popup checkout script directly:
 ```html
-<script src="https://pay.example.com/paygate.js"></script>
+<script src="https://pay.example.com/krostio.js"></script>
 <script>
-  PayGate.open({
+  Krostio.open({
     paymentId: 'pay_01ha9x201',
     onSuccess: function(data) {
       console.log('Payment verified atomically', data);
@@ -191,7 +191,7 @@ Merchants can embed the public popup checkout script directly:
   });
 </script>
 ```
-- Communication between parent window and checkout iframe is conducted via strongly-typed `postMessage` events (`paygate:paid`, `paygate:close`, `paygate:error`).
+- Communication between parent window and checkout iframe is conducted via strongly-typed `postMessage` events (`krostio:paid`, `krostio:close`, `krostio:error`).
 
 ---
 

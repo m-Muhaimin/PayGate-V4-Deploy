@@ -1,5 +1,5 @@
 /**
- * PayGate Platform v4.0 Core Domain Models & Types
+ * Krostio Platform v4.0 Core Domain Models & Types
  */
 
 export type ProviderType = 'bkash' | 'nagad' | 'rocket' | 'upay' | 'cellfin';

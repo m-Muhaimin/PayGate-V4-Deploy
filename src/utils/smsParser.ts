@@ -1,5 +1,5 @@
 /**
- * PayGate MFS SMS Ingest & Parser Engine
+ * Krostio MFS SMS Ingest & Parser Engine
  * Backed by @paygate/domain provider adapters and pure rules.
  */
 

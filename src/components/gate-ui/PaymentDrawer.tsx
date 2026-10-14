@@ -106,7 +106,7 @@ export const PaymentDrawer: React.FC<PaymentDrawerProps> = ({ paymentId, onClose
                     </span>
                   </div>
                   <div>
-                    <span className="text-[11px] text-[var(--ink-3)] block">PayGate Fee (5%)</span>
+                    <span className="text-[11px] text-[var(--ink-3)] block">Krostio Fee (5%)</span>
                     <span className="text-base font-medium font-mono tabular-nums text-[var(--danger)]">
                       - {formatPaisaToBDT(payment.feeAmountPaisa)}
                     </span>
@@ -296,7 +296,7 @@ export const PaymentDrawer: React.FC<PaymentDrawerProps> = ({ paymentId, onClose
 
                   <div>
                     <span className="text-xs font-semibold text-[var(--ink-2)] block mb-1.5">
-                      PayGate-Signature Header (HMAC-SHA256)
+                      Krostio-Signature Header (HMAC-SHA256)
                     </span>
                     <div className="p-2.5 bg-[var(--surface-2)] rounded-lg border border-[var(--border)] font-mono text-xs text-[var(--ink-2)] break-all select-all">
                       {delivery.signature}

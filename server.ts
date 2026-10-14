@@ -15,21 +15,12 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express();
-const PORT = parseInt(process.env.PORT || '3000', 10);
 const DEFAULT_ADMIN_SECRET_KEY = 'adm_sec_paygate_prod9910';
 const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || DEFAULT_ADMIN_SECRET_KEY;
 
-// Refuse to boot in production with the public demo admin secret.
-if (process.env.NODE_ENV === 'production' && ADMIN_SECRET_KEY === DEFAULT_ADMIN_SECRET_KEY) {
-  console.error('[PayGate API] FATAL: set ADMIN_SECRET_KEY to a strong, unique value before running in production.');
-  process.exit(1);
-}
-
-app.use(express.json());
-
-// Initialize Gateway Store
-gatewayStore.init();
+// ==========================================
+// APP FACTORY (shared by long-lived server and Vercel serverless)
+// ==========================================
 
 // ==========================================
 // AUTHENTICATION MIDDLEWARES
@@ -77,34 +68,59 @@ function requireAdminAuth(req: AuthenticatedRequest, res: Response, next: NextFu
 // ==========================================
 // BACKGROUND AUTOMATED WORKERS
 // ==========================================
+// On the long-lived server these run as in-process timers (see startServer below).
+// On Vercel they are invoked as HTTP endpoints by Vercel Cron, via api/index.ts.
 
-// 1. Transactional Outbox Webhook Worker (dispatches every 3 seconds)
-setInterval(async () => {
+/** Dispatches a batch of pending outbox webhooks. Returns dispatch stats. */
+export async function runOutboxWorker(batchSize = 10) {
   try {
-    await gatewayStore.processOutboxBatch(10);
+    const result = await gatewayStore.processOutboxBatch(batchSize);
+    return result ?? { dispatched: 0 };
   } catch (err: any) {
-    console.error('[PayGate Outbox Worker] Error dispatching webhooks:', err.message);
+    console.error('[Krostio Outbox Worker] Error dispatching webhooks:', err.message);
+    return { dispatched: 0, error: err.message };
   }
-}, 3000);
+}
 
-// 2. Stale Payment Expiry Sweeper (runs every 30 seconds)
-setInterval(() => {
+/** Marks stale awaiting_payment rows as expired. Returns the swept count. */
+export function runExpirySweeper() {
   try {
     const swept = gatewayStore.sweepExpiredPayments();
     if (swept > 0) {
-      console.log(`[PayGate Expiry Sweeper] Marked ${swept} stale payments as expired.`);
+      console.log(`[Krostio Expiry Sweeper] Marked ${swept} stale payments as expired.`);
     }
+    return swept;
   } catch (err: any) {
-    console.error('[PayGate Expiry Sweeper] Error:', err.message);
+    console.error('[Krostio Expiry Sweeper] Error:', err.message);
+    return 0;
   }
-}, 30000);
+}
+
+/** Validates the bearer secret guarding the Vercel Cron endpoints. */
+export function verifyCronSecret(req: any): boolean {
+  const secret = process.env.CRON_SECRET;
+  if (!secret) return false;
+  const header = String(req.headers?.['authorization'] || '');
+  return header.replace(/^Bearer\s+/i, '') === secret;
+}
+
+/**
+ * Builds the Express application. Exported so the Vercel serverless entrypoint
+ * (`api/index.ts`) can mount the exact same routes without starting a listener.
+ */
+export function buildApiApp() {
+  const apiApp = express();
+  apiApp.use(express.json());
+
+  // Initialize Gateway Store (idempotent: loads from Postgres/Supabase when configured)
+  gatewayStore.init();
 
 // ==========================================
 // MERCHANT API V1 ENDPOINTS
 // ==========================================
 
 // 1. POST /v1/payments (Merchant creates payment with mandatory API key auth & plan validation)
-app.post('/v1/payments', requireMerchantAuth, async (req: AuthenticatedRequest, res: Response) => {
+apiApp.post('/v1/payments', requireMerchantAuth, async (req: AuthenticatedRequest, res: Response) => {
   const merchant = req.merchant!;
   const idempotencyKey = req.headers['idempotency-key'] as string;
 
@@ -198,32 +214,32 @@ app.post('/v1/payments', requireMerchantAuth, async (req: AuthenticatedRequest, 
 });
 
 // 2. GET /v1/payments (List merchant payments)
-app.get('/v1/payments', requireMerchantAuth, (req: AuthenticatedRequest, res: Response) => {
+apiApp.get('/v1/payments', requireMerchantAuth, (req: AuthenticatedRequest, res: Response) => {
   const merchant = req.merchant!;
   const payments = gatewayStore.getAllPayments(merchant.id);
   return res.json(payments);
 });
 
 // 3. GET /v1/payments/:id
-app.get('/v1/payments/:id', (req: Request, res: Response) => {
+apiApp.get('/v1/payments/:id', (req: Request, res: Response) => {
   const payment = gatewayStore.getPayment(req.params.id);
   if (!payment) return res.status(404).json({ error: 'Payment not found' });
   return res.json(payment);
 });
 
 // 4. GET /v1/merchant/me
-app.get('/v1/merchant/me', requireMerchantAuth, (req: AuthenticatedRequest, res: Response) => {
+apiApp.get('/v1/merchant/me', requireMerchantAuth, (req: AuthenticatedRequest, res: Response) => {
   return res.json(req.merchant);
 });
 
 // 5. GET /v1/plans
-app.get('/v1/plans', requireMerchantAuth, (req: AuthenticatedRequest, res: Response) => {
+apiApp.get('/v1/plans', requireMerchantAuth, (req: AuthenticatedRequest, res: Response) => {
   const plans = gatewayStore.getAllPricingPlans(req.merchant!.id);
   return res.json(plans);
 });
 
 // 6. GET /v1/ledger
-app.get('/v1/ledger', requireMerchantAuth, (req: AuthenticatedRequest, res: Response) => {
+apiApp.get('/v1/ledger', requireMerchantAuth, (req: AuthenticatedRequest, res: Response) => {
   const entries = gatewayStore.getLedgerEntries(req.merchant!.id);
   return res.json(entries);
 });
@@ -233,7 +249,7 @@ app.get('/v1/ledger', requireMerchantAuth, (req: AuthenticatedRequest, res: Resp
 // ==========================================
 
 // 7. GET /v1/pay/:id (Customer checkout page view)
-app.get('/v1/pay/:id', (req: Request, res: Response) => {
+apiApp.get('/v1/pay/:id', (req: Request, res: Response) => {
   const payment = gatewayStore.getPayment(req.params.id);
   if (!payment) return res.status(404).json({ error: 'Payment link expired or not found' });
 
@@ -249,7 +265,7 @@ app.get('/v1/pay/:id', (req: Request, res: Response) => {
 });
 
 // 8. POST /v1/pay/:id/confirm (Customer claims TrxID with anti-brute-force & atomic claim engine)
-app.post('/v1/pay/:id/confirm', async (req: Request, res: Response) => {
+apiApp.post('/v1/pay/:id/confirm', async (req: Request, res: Response) => {
   const payment = gatewayStore.getPayment(req.params.id);
   if (!payment) return res.status(404).json({ error: 'Payment not found' });
 
@@ -325,7 +341,7 @@ app.post('/v1/pay/:id/confirm', async (req: Request, res: Response) => {
 // ==========================================
 
 // 9. POST /v1/sms/webhook (Strict HMAC-SHA256 signature and monotonic sequence check)
-app.post('/v1/sms/webhook', async (req: Request, res: Response) => {
+apiApp.post('/v1/sms/webhook', async (req: Request, res: Response) => {
   const deviceId = req.headers['x-device-id'] as string;
   const seqHeader = req.headers['x-device-seq'] as string;
   const timestampHeader = req.headers['x-device-timestamp'] as string;
@@ -476,7 +492,7 @@ app.post('/v1/sms/webhook', async (req: Request, res: Response) => {
 // ==========================================
 
 // 10. GET /v1/devices/status (Sanitized: NO secret leakage, masked IMEI)
-app.get('/v1/devices/status', (req: Request, res: Response) => {
+apiApp.get('/v1/devices/status', (req: Request, res: Response) => {
   const device = gatewayStore.getDevice('dev_superadmin_01');
   if (!device) return res.status(404).json({ error: 'Device not found' });
 
@@ -500,7 +516,7 @@ app.get('/v1/devices/status', (req: Request, res: Response) => {
 });
 
 // 11. POST /v1/devices/heartbeat
-app.post('/v1/devices/heartbeat', requireAdminAuth, (req: Request, res: Response) => {
+apiApp.post('/v1/devices/heartbeat', requireAdminAuth, (req: Request, res: Response) => {
   const { battery_level, is_charging, latency_ms } = req.body;
   const device = gatewayStore.getDevice('dev_superadmin_01');
   if (!device) return res.status(404).json({ error: 'Device not found' });
@@ -514,25 +530,48 @@ app.post('/v1/devices/heartbeat', requireAdminAuth, (req: Request, res: Response
 });
 
 // 12. GET /v1/audit/logs (Protected by Admin Authentication)
-app.get('/v1/audit/logs', requireAdminAuth, (_req: Request, res: Response) => {
+apiApp.get('/v1/audit/logs', requireAdminAuth, (_req: Request, res: Response) => {
   return res.json(gatewayStore.getAuditChain());
 });
 
 // 13. POST /v1/outbox/process (Protected by Admin Authentication)
-app.post('/v1/outbox/process', requireAdminAuth, async (_req: Request, res: Response) => {
+apiApp.post('/v1/outbox/process', requireAdminAuth, async (_req: Request, res: Response) => {
   const result = await gatewayStore.processOutboxBatch(20);
   return res.json(result);
 });
 
 // 14. GET /v1/quarantine (Review queue for quarantined SMS)
-app.get('/v1/quarantine', requireAdminAuth, (_req: Request, res: Response) => {
+apiApp.get('/v1/quarantine', requireAdminAuth, (_req: Request, res: Response) => {
   return res.json(gatewayStore.getQuarantinedSms());
 });
 
+  return apiApp;
+}
+
 // ==========================================
-// VITE SPA DEV SERVER MOUNTING
+// LONG-LIVED SERVER BOOTSTRAP (Railway / Docker / local dev)
 // ==========================================
+// Skipped when this module is imported by the Vercel serverless entrypoint.
+
+const PORT = parseInt(process.env.PORT || '3000', 10);
+
 async function startServer() {
+  // Refuse to boot in production with the public demo admin secret.
+  if (process.env.NODE_ENV === 'production' && ADMIN_SECRET_KEY === DEFAULT_ADMIN_SECRET_KEY) {
+    console.error('[Krostio API] FATAL: set ADMIN_SECRET_KEY to a strong, unique value before running in production.');
+    process.exit(1);
+  }
+
+  const app = buildApiApp();
+
+  // In-process background workers (Vercel drives these via cron endpoints instead).
+  setInterval(() => {
+    void runOutboxWorker(10);
+  }, 3000);
+  setInterval(() => {
+    runExpirySweeper();
+  }, 30000);
+
   const httpServer = http.createServer(app);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -555,8 +594,11 @@ async function startServer() {
   }
 
   httpServer.listen(PORT, '0.0.0.0', () => {
-    console.log(`[PayGate API] Server listening on http://0.0.0.0:${PORT}`);
+    console.log(`[Krostio API] Server listening on http://0.0.0.0:${PORT}`);
   });
 }
 
-startServer();
+// Only bootstrap when executed directly (not when imported by api/index.ts on Vercel).
+if (process.env.VERCEL !== '1') {
+  startServer();
+}

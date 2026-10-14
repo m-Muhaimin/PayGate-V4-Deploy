@@ -91,7 +91,7 @@ export const DevelopersTab: React.FC = () => {
   };
 
   const codeSnippets = {
-    curl: `curl -X POST https://api.paygate.com/v1/payments \\
+    curl: `curl -X POST https://api.krostio.com/v1/payments \\
   -H "Authorization: Bearer ${merchant.liveApiKey}" \\
   -H "Idempotency-Key: ${Date.now()}" \\
   -H "Content-Type: application/json" \\
@@ -105,8 +105,8 @@ export const DevelopersTab: React.FC = () => {
     node: `// Node.js (Express / Next.js) Webhook Verification
 import crypto from 'crypto';
 
-app.post('/webhooks/paygate', express.raw({ type: 'application/json' }), (req, res) => {
-  const signatureHeader = req.headers['paygate-signature']; // t=17918...,v1=hex...
+app.post('/webhooks/krostio', express.raw({ type: 'application/json' }), (req, res) => {
+  const signatureHeader = req.headers['krostio-signature']; // t=17918...,v1=hex...
   const [tPart, v1Part] = signatureHeader.split(',');
   const timestamp = tPart.split('=')[1];
   const signature = v1Part.split('=')[1];
@@ -130,7 +130,7 @@ app.post('/webhooks/paygate', express.raw({ type: 'application/json' }), (req, r
     python: `# Python (FastAPI / Flask) Verification
 import hmac, hashlib
 
-def verify_paygate_webhook(raw_body_bytes, signature_header, secret):
+def verify_krostio_webhook(raw_body_bytes, signature_header, secret):
     parts = dict(p.split('=') for p in signature_header.split(','))
     timestamp = parts.get('t')
     expected_v1 = parts.get('v1')
@@ -139,8 +139,8 @@ def verify_paygate_webhook(raw_body_bytes, signature_header, secret):
     computed = hmac.new(secret.encode('utf-8'), signed_payload, hashlib.sha256).hexdigest()
     
     return hmac.compare_digest(computed, expected_v1)`,
-    js: `<!-- Embed PayGate Popup Modal SDK on your customer checkout page -->
-<script src="https://pay.example.com/paygate.js"></script>
+    js: `<!-- Embed Krostio Popup Modal SDK on your customer checkout page -->
+<script src="https://pay.example.com/krostio.js"></script>
 
 <button id="pay-btn">Pay with MFS (bKash / Nagad / Rocket)</button>
 
@@ -150,8 +150,8 @@ def verify_paygate_webhook(raw_body_bytes, signature_header, secret):
     const res = await fetch('/api/create-payment-order', { method: 'POST' });
     const { id } = await res.json(); // e.g. "pay_01ha9x201"
 
-    // 2. Open PayGate interactive popup modal overlay
-    PayGate.open({
+    // 2. Open Krostio interactive popup modal overlay
+    Krostio.open({
       paymentId: id,
       onSuccess: function(data) {
         console.log('Payment verified and paid atomically!', data);
@@ -220,8 +220,8 @@ def verify_paygate_webhook(raw_body_bytes, signature_header, secret):
         <div>
           <h3 className="text-sm font-semibold text-[var(--ink)]">Signed Webhooks (HMAC-SHA256)</h3>
           <p className="text-xs text-[var(--ink-2)] mt-0.5">
-            PayGate notifies your endpoint when payments are paid, expired, or flagged. All webhooks include a{' '}
-            <code className="font-mono text-[var(--accent)] font-semibold">PayGate-Signature: t=&lt;unix&gt;,v1=&lt;hex&gt;</code> header.
+            Krostio notifies your endpoint when payments are paid, expired, or flagged. All webhooks include a{' '}
+            <code className="font-mono text-[var(--accent)] font-semibold">Krostio-Signature: t=&lt;unix&gt;,v1=&lt;hex&gt;</code> header.
           </p>
         </div>
 
@@ -231,7 +231,7 @@ def verify_paygate_webhook(raw_body_bytes, signature_header, secret):
               label="Merchant Webhook Endpoint URL"
               value={webhookUrlInput}
               onChange={(e) => setWebhookUrlInput(e.target.value)}
-              placeholder="https://api.yourdomain.com/webhooks/paygate"
+              placeholder="https://api.yourdomain.com/webhooks/krostio"
               isMono
               required
             />
@@ -304,7 +304,7 @@ def verify_paygate_webhook(raw_body_bytes, signature_header, secret):
             <div>
               <label className="text-xs font-medium text-[var(--ink-3)] block mb-1">Generated Header</label>
               <div className="p-3 bg-[var(--surface-2)] border border-[var(--border)] rounded-xl font-mono text-xs text-[var(--ink-2)] break-all min-h-[50px]">
-                {testSignatureHeader || 'Click "Compute & Verify Signature" above to generate PayGate-Signature'}
+                {testSignatureHeader || 'Click "Compute & Verify Signature" above to generate Krostio-Signature'}
               </div>
             </div>
 

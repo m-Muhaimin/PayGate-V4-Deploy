@@ -59,7 +59,7 @@ export const SettingsTab: React.FC = () => {
           </div>
         </div>
         <div className="text-right text-xs text-[var(--ink-3)] hidden sm:block">
-          <span>Reviewed by PayGate Compliance Desk</span>
+          <span>Reviewed by Krostio Compliance Desk</span>
           <span className="block font-mono text-[11px]">Valid through Oct 2027</span>
         </div>
       </div>
@@ -142,7 +142,7 @@ export const SettingsTab: React.FC = () => {
               </div>
               <p className="text-xs text-[var(--ink-2)] mt-1 leading-relaxed">
                 If an incoming SMS carries a reference that matches a pending payment and the amount agrees,
-                PayGate automatically marks it paid without waiting for the customer to press "Confirm".
+                Krostio automatically marks it paid without waiting for the customer to press "Confirm".
               </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer shrink-0 mt-1">

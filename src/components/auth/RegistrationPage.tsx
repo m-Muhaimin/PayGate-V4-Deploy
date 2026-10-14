@@ -128,7 +128,7 @@ export const RegistrationPage: React.FC = () => {
       });
 
       setIsLoading(false);
-      addToast('KYB Registered Successfully', `Welcome ${businessName} to PayGate Sandbox!`, 'success');
+      addToast('KYB Registered Successfully', `Welcome ${businessName} to Krostio Sandbox!`, 'success');
       navigate('/');
     }, 700);
   };
@@ -188,7 +188,7 @@ export const RegistrationPage: React.FC = () => {
       email: 'Work Email Address',
       pass: 'Master Password',
       twoFactorText: 'Enforce mandatory 2FA Authenticator app on staff sign-in',
-      terms: 'I agree to the PayGate Bangladesh Merchant Terms, 5% fee schedule, and MFS pooling compliance rules.',
+      terms: 'I agree to the Krostio Bangladesh Merchant Terms, 5% fee schedule, and MFS pooling compliance rules.',
       nextBtn: 'Continue to Next Step',
       backBtn: 'Previous Step',
       submitBtn: 'Complete Registration & Launch SaaS',
@@ -243,7 +243,7 @@ export const RegistrationPage: React.FC = () => {
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-bold tracking-tight text-[var(--ink)] leading-none">
-                PayGate Platform
+                Krostio Platform
               </span>
               <span className="text-[10px] text-[var(--ink-3)] font-mono mt-0.5 hidden sm:inline">
                 Merchant Gateway Onboarding v3.1

@@ -1,5 +1,5 @@
 -- ============================================================================
--- PayGate Platform v3.1 — Production Database Schema Reference
+-- Krostio Platform v3.1 — Production Database Schema Reference
 -- For Supabase migrations, see: supabase/migrations/20261013000001_paygate_v3_core_schema.sql
 -- ============================================================================
 

@@ -516,7 +516,7 @@ export const initialLedgerEntries: LedgerEntry[] = [
     debitPaisa: 60000,
     creditPaisa: 0,
     balancePaisaAfter: 4740000,
-    description: 'PayGate platform fee (5.00%) for ORD-94800',
+    description: 'Krostio platform fee (5.00%) for ORD-94800',
     createdAt: '2026-10-11T11:15:20Z',
   },
   {
@@ -549,7 +549,7 @@ export const initialLedgerEntries: LedgerEntry[] = [
     debitPaisa: 6000,
     creditPaisa: 0,
     balancePaisaAfter: 3854000,
-    description: 'PayGate platform fee (5.00%) for ORD-94812',
+    description: 'Krostio platform fee (5.00%) for ORD-94812',
     createdAt: '2026-10-12T15:25:02Z',
   },
 ];

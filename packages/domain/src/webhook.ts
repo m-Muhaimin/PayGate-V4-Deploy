@@ -1,6 +1,6 @@
 /**
  * @paygate/domain - Webhook HMAC-SHA256 Signer & Verification Utility
- * Specification: PayGate-Signature: t=<unix>,v1=<hex>
+ * Specification: Krostio-Signature: t=<unix>,v1=<hex>
  */
 
 import { timingSafeEqualStr } from './device.ts';
@@ -42,14 +42,14 @@ export async function verifyWebhookSignature(
   secret: string,
   toleranceSeconds: number = 300
 ): Promise<{ isValid: boolean; reason?: string }> {
-  if (!header) return { isValid: false, reason: 'Missing PayGate-Signature header' };
+  if (!header) return { isValid: false, reason: 'Missing Krostio-Signature header' };
 
   const parts = header.split(',');
   const tPart = parts.find((p) => p.startsWith('t='));
   const v1Part = parts.find((p) => p.startsWith('v1='));
 
   if (!tPart || !v1Part) {
-    return { isValid: false, reason: 'Malformed PayGate-Signature header format (expected t=...,v1=...)' };
+    return { isValid: false, reason: 'Malformed Krostio-Signature header format (expected t=...,v1=...)' };
   }
 
   const timestamp = parseInt(tPart.split('=')[1], 10);

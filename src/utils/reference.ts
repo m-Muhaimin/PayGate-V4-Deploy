@@ -1,5 +1,5 @@
 /**
- * PayGate Reference Generator and Check-Character Validator
+ * Krostio Reference Generator and Check-Character Validator
  * Re-exports pure rules from @paygate/domain
  */
 

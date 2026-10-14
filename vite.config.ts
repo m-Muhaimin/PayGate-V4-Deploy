@@ -14,8 +14,8 @@ export default defineConfig(() => {
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg', 'pwa-192x192.png', 'pwa-512x512.png'],
         manifest: {
           id: '/',
-          name: 'PayGate Platform — Merchant SaaS',
-          short_name: 'PayGate',
+          name: 'Krostio Platform — Merchant SaaS',
+          short_name: 'Krostio',
           description: 'Bangladeshi MFS payment gateway SaaS for bKash, Nagad, and Rocket with real-time SMS matching engine.',
           theme_color: '#FAFAF9',
           background_color: '#FAFAF9',

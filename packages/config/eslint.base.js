@@ -1,5 +1,5 @@
 /**
- * PayGate ESLint Base Configuration Preset
+ * Krostio ESLint Base Configuration Preset
  */
 export default {
   rules: {

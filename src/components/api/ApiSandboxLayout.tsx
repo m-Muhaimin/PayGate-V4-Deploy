@@ -316,7 +316,7 @@ export const ApiSandboxLayout: React.FC = () => {
         setResponseHeaders({ 'Content-Type': 'application/json' });
         setResponseJson({
           status: 'ok',
-          service: 'PayGate Bangladeshi MFS Gateway API',
+          service: 'Krostio Bangladeshi MFS Gateway API',
           version: 'v4.0.0-fullstack',
           engine: 'Double-Entry Ledger & SMS Forwarder Ingest Engine',
           uptime: '99.98%',
@@ -348,7 +348,7 @@ ${Object.entries(requestHeaders)
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-base font-bold text-[var(--ink)]">
-                api.example.com — PayGate REST Sandbox
+                api.example.com — Krostio REST Sandbox
               </h1>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 text-emerald-600 font-semibold border border-emerald-500/20">
                 v1.4 Live
@@ -580,7 +580,7 @@ ${Object.entries(requestHeaders)
             ) : (
               <div className="p-8 rounded-xl bg-[var(--surface-2)]/50 border border-dashed border-[var(--border)] text-center text-xs text-[var(--ink-3)] space-y-1">
                 <Terminal className="w-6 h-6 mx-auto text-[var(--ink-3)] opacity-60" />
-                <p>Click "Send Request" to test this endpoint against the PayGate engine.</p>
+                <p>Click "Send Request" to test this endpoint against the Krostio engine.</p>
               </div>
             )}
           </div>

@@ -66,7 +66,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
 
   const handleSignOut = () => {
     setIsProfileOpen(false);
-    addToast('Signed Out', 'You have been signed out of PayGate', 'info');
+    addToast('Signed Out', 'You have been signed out of Krostio', 'info');
     navigate('/signin');
   };
 
@@ -98,7 +98,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           {isOpsAdmin ? (
             <>
               <span className="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-                <ShieldAlert className="w-3.5 h-3.5" /> PayGate Ops
+                <ShieldAlert className="w-3.5 h-3.5" /> Krostio Ops
               </span>
               <span className="text-[var(--ink-3)] hidden sm:inline">/</span>
               <span className="text-[var(--ink)] font-semibold hidden sm:inline">admin.example.com</span>
@@ -106,7 +106,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
           ) : isApi ? (
             <>
               <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-                <Code2 className="w-3.5 h-3.5" /> PayGate API
+                <Code2 className="w-3.5 h-3.5" /> Krostio API
               </span>
               <span className="text-[var(--ink-3)] hidden sm:inline">/</span>
               <span className="text-[var(--ink)] font-semibold hidden sm:inline">api.example.com</span>
@@ -234,7 +234,7 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({
                   {isOpsAdmin ? 'Tanvir Ahmed (Ops Checker)' : merchant.name}
                 </span>
                 <span className="text-[11px] font-mono text-[var(--ink-3)] block truncate">
-                  {isOpsAdmin ? 'ops.checker@paygate.internal' : 'gmsinternationalbd5@gmail.com'}
+                  {isOpsAdmin ? 'ops.checker@krostio.internal' : 'gmsinternationalbd5@gmail.com'}
                 </span>
                 <div className="mt-1.5 flex items-center gap-2">
                   <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${

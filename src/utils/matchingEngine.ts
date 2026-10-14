@@ -1,5 +1,5 @@
 /**
- * PayGate Matching Engine
+ * Krostio Matching Engine
  * Implements the atomic transaction matching rules backed by @paygate/domain.
  */
 

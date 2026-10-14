@@ -64,7 +64,7 @@ export const SignInPage: React.FC = () => {
 
   const t = {
     en: {
-      title: role === 'admin' ? 'PayGate Ops Command Center' : 'Sign in to Merchant Portal',
+      title: role === 'admin' ? 'Krostio Ops Command Center' : 'Sign in to Merchant Portal',
       subtitle: role === 'admin'
         ? 'Manage SIM forwarder fleet, resolve dispute exceptions, and authorize BEFTN batches'
         : 'Manage payments, pricing plans, signed webhooks, and payouts',
@@ -107,7 +107,7 @@ export const SignInPage: React.FC = () => {
               PG
             </div>
             <span className="font-bold text-base text-[var(--ink)] tracking-tight">
-              PayGate Platform
+              Krostio Platform
             </span>
           </Link>
           <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-[var(--accent-soft)] text-[var(--accent)] font-semibold hidden sm:inline">
@@ -160,7 +160,7 @@ export const SignInPage: React.FC = () => {
               type="button"
               onClick={() => {
                 setRole('admin');
-                setEmail('ops.tanvir@paygate.internal');
+                setEmail('ops.tanvir@krostio.internal');
               }}
               className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                 role === 'admin'

@@ -61,7 +61,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
                   <div className="w-8 h-8 rounded-lg bg-[var(--accent-soft)] text-[var(--accent)] flex items-center justify-center font-bold text-xs">
                     PG
                   </div>
-                  <h3 className="text-sm font-bold text-[var(--ink)]">Install PayGate on iOS</h3>
+                  <h3 className="text-sm font-bold text-[var(--ink)]">Install Krostio on iOS</h3>
                 </div>
                 <button
                   onClick={() => setShowIOSModal(false)}
@@ -72,7 +72,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
               </div>
 
               <p className="text-xs text-[var(--ink-2)] leading-relaxed">
-                Install PayGate Platform directly on your iPhone or iPad home screen for standalone native performance:
+                Install Krostio Platform directly on your iPhone or iPad home screen for standalone native performance:
               </p>
 
               <div className="space-y-3 p-3.5 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] text-xs text-[var(--ink)]">

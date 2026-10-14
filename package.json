@@ -10,6 +10,8 @@
     "build:checkout": "vite build apps/checkout",
     "build:merchant": "vite build apps/merchant",
     "build:admin": "vite build apps/admin",
+    "build:landing": "vite build apps/landing",
+    "build:vercel": "vite build apps/checkout && vite build apps/merchant && vite build apps/admin && vite build apps/landing",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js apps/*/dist",
     "lint": "tsc --noEmit",

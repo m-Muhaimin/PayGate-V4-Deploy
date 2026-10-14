@@ -83,7 +83,7 @@ export type WebhookPaidPayload = z.infer<typeof WebhookPaidPayloadSchema>;
 export const paygateOpenApiSpec = {
   openapi: '3.1.0',
   info: {
-    title: 'PayGate MFS API',
+    title: 'Krostio MFS API',
     version: '4.0.0',
     description: 'Bangladeshi MFS Verifier Gateway API for bKash, Nagad, Rocket, Upay, and Cellfin',
   },

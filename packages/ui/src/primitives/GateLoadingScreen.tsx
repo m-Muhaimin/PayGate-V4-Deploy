@@ -8,7 +8,7 @@ export interface GateLoadingScreenProps {
 }
 
 export const GateLoadingScreen: React.FC<GateLoadingScreenProps> = ({
-  message = 'Loading PayGate Platform...',
+  message = 'Loading Krostio Platform...',
   subtext = 'Synchronizing real-time ledger and MFS fleet data',
   fullScreen = false,
 }) => {
@@ -26,7 +26,7 @@ export const GateLoadingScreen: React.FC<GateLoadingScreenProps> = ({
         
         {/* Core Monogram */}
         <div className="relative w-16 h-16 rounded-2xl bg-[var(--ink)] text-[var(--bg)] flex items-center justify-center font-bold text-xl shadow-lg border border-[var(--border)]">
-          PG
+          KR
         </div>
 
         {/* Small spinning ring */}

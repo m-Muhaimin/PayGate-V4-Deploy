@@ -1,4 +1,4 @@
-# Deploying PayGate v4
+# Deploying Krostio v4
 
 Single Node service: Express (`server.ts`, run with `tsx`) serves the `/v1/*` API and, in production, the static Vite build from `dist/`.
 
@@ -18,8 +18,8 @@ Copy `.env.example` to `.env` and fill it in.
 
 ## Option A: Docker
 ```
-docker build -t paygate .
-docker run -p 3000:3000 -e ADMIN_SECRET_KEY='<strong-random-value>' paygate
+docker build -t krostio .
+docker run -p 3000:3000 -e ADMIN_SECRET_KEY='<strong-random-value>' krostio
 ```
 
 ## Option B: Node directly

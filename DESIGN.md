@@ -1,6 +1,6 @@
 # Gate UI Design System Specification (DESIGN.md)
 
-**Product**: PayGate Platform — Bangladeshi Merchant MFS Payment Gateway SaaS  
+**Product**: Krostio Platform — Bangladeshi Merchant MFS Payment Gateway SaaS  
 **Version**: 3.1  
 **Design System**: Gate UI Design System  
 **Date**: 13 October 2026  
@@ -10,7 +10,7 @@
 
 ## 1. Design Philosophy & Constitution
 
-Gate UI is the unified, calm, precise design system engineered for the PayGate Merchant SaaS and its mobile client endpoints.
+Gate UI is the unified, calm, precise design system engineered for the Krostio Merchant SaaS and its mobile client endpoints.
 
 ### Core Principles
 1. **Calm, Precise, Fast**: A quiet neutral canvas (`#FAFAF9` light / `#0B0B0E` dark), hairlines instead of heavy drop shadows, and high-density tabular numerals.

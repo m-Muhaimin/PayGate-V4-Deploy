@@ -1,5 +1,5 @@
 /**
- * PayGate Authoritative Relational Gateway Store & PostgreSQL Client
+ * Krostio Authoritative Relational Gateway Store & PostgreSQL Client
  * Implements atomic claim engine, counterpart SMS-after-claim matching,
  * double-entry ledger bookkeeping, and signed outbox queueing.
  */
@@ -102,7 +102,7 @@ class GatewayStore {
       liveApiKey: 'sk_live_pg_99210a48b3c109df291c',
       testApiKey: 'sk_test_pg_demo88129a00b12',
       webhookSecret: 'whsec_e9f82b71940a12cf498a1293',
-      webhookUrl: 'https://merchant-api.deshicart.com.bd/api/webhooks/paygate',
+      webhookUrl: 'https://merchant-api.deshicart.com.bd/api/webhooks/krostio',
       autoConfirm: true,
       balancePaisa: 1450000,
       heldPaisa: 0,
@@ -178,9 +178,9 @@ class GatewayStore {
         await client.query('SELECT 1');
         client.release();
         this.usePg = true;
-        console.log('[PayGate GatewayStore] Connected to PostgreSQL at', dbUrl.replace(/:[^:@]+@/, ':***@'));
+        console.log('[Krostio GatewayStore] Connected to PostgreSQL at', dbUrl.replace(/:[^:@]+@/, ':***@'));
       } catch (err: any) {
-        console.warn('[PayGate GatewayStore] Could not connect to PostgreSQL, falling back to ACID in-memory store:', err.message);
+        console.warn('[Krostio GatewayStore] Could not connect to PostgreSQL, falling back to ACID in-memory store:', err.message);
         this.usePg = false;
       }
     }
@@ -188,7 +188,7 @@ class GatewayStore {
     // Synchronize authoritative state from Supabase database if configured
     if (isSupabaseConfigured()) {
       try {
-        console.log('[PayGate GatewayStore] Loading authoritative state from Supabase...');
+        console.log('[Krostio GatewayStore] Loading authoritative state from Supabase...');
         const [
           { data: dbMerchants },
           { data: dbPlans },
@@ -221,7 +221,7 @@ class GatewayStore {
               liveApiKey: existing.liveApiKey || 'sk_live_pg_99210a48b3c109df291c',
               testApiKey: existing.testApiKey || 'sk_test_pg_demo88129a00b12',
               webhookSecret: m.webhook_secret_hash || existing.webhookSecret || 'whsec_e9f82b71940a12cf498a1293',
-              webhookUrl: m.webhook_url || existing.webhookUrl || 'https://merchant-api.deshicart.com.bd/api/webhooks/paygate',
+              webhookUrl: m.webhook_url || existing.webhookUrl || 'https://merchant-api.deshicart.com.bd/api/webhooks/krostio',
               autoConfirm: m.auto_confirm ?? true,
               balancePaisa: m.balance_paisa ?? existing.balancePaisa ?? 1450000,
               heldPaisa: m.held_paisa ?? existing.heldPaisa ?? 0,
@@ -310,9 +310,9 @@ class GatewayStore {
           }
         }
 
-        console.log(`[PayGate GatewayStore] Supabase sync completed: ${this.merchants.size} merchants, ${this.pricingPlans.size} pricing plans, ${this.devices.size} devices, ${this.payments.size} payments.`);
+        console.log(`[Krostio GatewayStore] Supabase sync completed: ${this.merchants.size} merchants, ${this.pricingPlans.size} pricing plans, ${this.devices.size} devices, ${this.payments.size} payments.`);
       } catch (err: any) {
-        console.warn('[PayGate GatewayStore] Supabase sync notice:', err.message);
+        console.warn('[Krostio GatewayStore] Supabase sync notice:', err.message);
       }
     }
 
@@ -324,7 +324,7 @@ class GatewayStore {
         'SYSTEM_START',
         'system',
         'sys_01',
-        'PayGate Transaction Engine & Gateway Store Initialized',
+        'Krostio Transaction Engine & Gateway Store Initialized',
         '127.0.0.1'
       );
       this.auditChain.push(genesis);
@@ -393,7 +393,7 @@ class GatewayStore {
         created_at: payment.createdAt,
       }).then(({ error }) => {
         if (error) {
-          console.warn('[PayGate GatewayStore] Supabase payment replication notice:', error.message);
+          console.warn('[Krostio GatewayStore] Supabase payment replication notice:', error.message);
         }
       });
     }

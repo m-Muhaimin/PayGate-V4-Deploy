@@ -701,7 +701,7 @@ export const PayGateProvider: React.FC<{ children: React.ReactNode }> = ({ child
       debitPaisa: feeDebit,
       creditPaisa: 0,
       balancePaisaAfter: balanceAfterFee,
-      description: `PayGate 5.00% fee for ${payment.orderId}`,
+      description: `Krostio 5.00% fee for ${payment.orderId}`,
       createdAt: paidAt,
     };
 

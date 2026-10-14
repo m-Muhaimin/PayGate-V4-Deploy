@@ -1,5 +1,5 @@
 /**
- * PayGate Cryptographic Device Signing & Anti-Replay Defense
+ * Krostio Cryptographic Device Signing & Anti-Replay Defense
  * Re-exports pure functions from @paygate/domain
  */
 

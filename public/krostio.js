@@ -1,10 +1,10 @@
 /**
- * PayGate Popup Modal SDK (paygate.js)
+ * Krostio Popup Modal SDK (krostio.js)
  * Embeddable client-side script for Bangladeshi Merchant checkouts.
  * Usage:
- *   <script src="https://pay.example.com/paygate.js"></script>
+ *   <script src="https://pay.example.com/krostio.js"></script>
  *   <script>
- *     PayGate.open({
+ *     Krostio.open({
  *       paymentId: 'pay_...',
  *       onSuccess: function(data) { console.log('Payment successful', data); },
  *       onClose: function() { console.log('Modal closed'); }
@@ -15,7 +15,7 @@
 (function (window, document) {
   'use strict';
 
-  var PayGate = {
+  var Krostio = {
     version: '4.0.0',
     _overlay: null,
     _iframe: null,
@@ -31,7 +31,7 @@
      */
     open: function (options) {
       if (!options || (!options.paymentId && !options.payUrl)) {
-        console.error('[PayGate] Missing required paymentId or payUrl');
+        console.error('[Krostio] Missing required paymentId or payUrl');
         return;
       }
 
@@ -42,7 +42,7 @@
 
       // 1. Create Modal Container
       var overlay = document.createElement('div');
-      overlay.id = 'paygate-modal-overlay';
+      overlay.id = 'krostio-modal-overlay';
       overlay.setAttribute('style', [
         'position: fixed',
         'top: 0',
@@ -81,7 +81,7 @@
       // 3. Create IFrame
       var iframe = document.createElement('iframe');
       iframe.src = targetUrl;
-      iframe.title = 'PayGate Checkout';
+      iframe.title = 'Krostio Checkout';
       iframe.setAttribute('style', [
         'width: 100%',
         'height: 100%',
@@ -119,19 +119,19 @@
 
         if (!event.data || typeof event.data !== 'object') return;
 
-        if (event.data.type === 'paygate:paid') {
+        if (event.data.type === 'krostio:paid') {
           if (typeof options.onSuccess === 'function') {
             options.onSuccess(event.data.payload);
           }
           setTimeout(function () {
             self.close();
           }, 1500);
-        } else if (event.data.type === 'paygate:close' || event.data.type === 'paygate:cancel') {
+        } else if (event.data.type === 'krostio:close' || event.data.type === 'krostio:cancel') {
           if (typeof options.onClose === 'function') {
             options.onClose();
           }
           self.close();
-        } else if (event.data.type === 'paygate:error') {
+        } else if (event.data.type === 'krostio:error') {
           if (typeof options.onError === 'function') {
             options.onError(event.data.error);
           }
@@ -165,5 +165,5 @@
     },
   };
 
-  window.PayGate = PayGate;
+  window.Krostio = Krostio;
 })(window, document);

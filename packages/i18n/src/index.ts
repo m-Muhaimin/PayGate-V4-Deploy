@@ -1,10 +1,10 @@
 export const en = {
   checkout: {
-    merchantTag: 'Secured by PayGate Bangladesh',
+    merchantTag: 'Secured by Krostio Bangladesh',
     order: 'Order',
     amountDue: 'Amount to Pay',
     selectProvider: 'Select Mobile Wallet',
-    walletNumber: 'PayGate Receiving Number',
+    walletNumber: 'Krostio Receiving Number',
     referenceLabel: 'Mandatory Payment Reference',
     referenceHint: 'Quote this exact 8-character reference in your wallet app',
     step1: '1. Open your',
@@ -49,7 +49,7 @@ export const en = {
     payoutBank: 'Bank Account (BEFTN)',
   },
   admin: {
-    title: 'PayGate Operations Console',
+    title: 'Krostio Operations Console',
     device: 'SMS Forwarder Device',
     wallets: 'Wallet Pool',
     review: 'Review Queue',
@@ -77,11 +77,11 @@ export const en = {
 
 export const bn = {
   checkout: {
-    merchantTag: 'পে-গেট বাংলাদেশ দ্বারা সুরক্ষিত',
+    merchantTag: 'ক্রোস্টিও দ্বারা সুরক্ষিত',
     order: 'অর্ডার',
     amountDue: 'পরিশোধের পরিমাণ',
     selectProvider: 'মোবাইল ওয়ালেট নির্বাচন করুন',
-    walletNumber: 'পে-গেট প্রাপক নম্বর',
+    walletNumber: 'ক্রোস্টিও প্রাপক নম্বর',
     referenceLabel: 'বাধ্যতামূলক পেমেন্ট রেফারেন্স',
     referenceHint: 'আপনার ওয়ালেট অ্যাপে এই ৮ অক্ষরের রেফারেন্সটি সঠিকভাবে লিখুন',
     step1: '১. আপনার',
@@ -126,7 +126,7 @@ export const bn = {
     payoutBank: 'ব্যাংক হিসাব (BEFTN)',
   },
   admin: {
-    title: 'পে-গেট অপারেশনস কনসোল',
+    title: 'ক্রোস্টিও অপারেশনস কনসোল',
     device: 'এসএমএস ফরোয়ার্ডার ডিভাইস',
     wallets: 'ওয়ালেট পুল',
     review: 'রিভিউ কিউ',

@@ -13,8 +13,17 @@ export default defineConfig({
       '@paygate/i18n': path.resolve(__dirname, '../../packages/i18n/src/index.ts'),
     },
   },
+  publicDir: '../../public',
+  base: '/merchant/',
   build: {
-    outDir: 'dist',
+    outDir: '../../dist/merchant',
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash][extname]',
+      },
+    },
   },
 });
